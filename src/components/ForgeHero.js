@@ -41,7 +41,7 @@ export default function ForgeHero({ setActiveTab }) {
   const generateRealImage = async () => {
     const prompt = constructHeroPrompt(heroDetails);
     setIsImageLoading(true);
-    setSharedResponse("Behold, the hero’s face shines with living light!");
+    setSharedResponse("Behold, the hero's face shines with living light!");
 
     try {
       const res = await fetch("/api/generateImage", {
@@ -51,9 +51,15 @@ export default function ForgeHero({ setActiveTab }) {
       });
 
       if (!res.ok) throw new Error("Image generation failed");
+
       const data = await res.json();
-      setHeroImageUrl(data.imageUrl);
-      setSharedResponse("A worthy visage has been conjured!");
+
+      if (data?.imageUrl) {
+        setHeroImageUrl(data.imageUrl);
+        setSharedResponse("A worthy visage has been conjured!");
+      } else {
+        throw new Error("No image URL returned");
+      }
     } catch (error) {
       console.error(error);
       setSharedResponse("Alas, the vision eludes me. Shall we try again?");
@@ -86,7 +92,6 @@ export default function ForgeHero({ setActiveTab }) {
       setCurrentForgeHeroStep(2); // Start attributes
       setCurrentQuestion("name");
     } else if (type === "surprise") {
-      // Will trigger AI later
       setSharedResponse("A hero, conjured from the void!");
       setCurrentForgeHeroStep(3); // Placeholder for now
     }
@@ -147,13 +152,13 @@ export default function ForgeHero({ setActiveTab }) {
                 />
               </div>
             )}
-            {/* Additional questions per KB go here */}
+            {/* TODO: Implement additional KB-defined questions here */}
           </div>
         );
       case 3:
         return (
           <div className="space-y-4">
-            {isImageLoading && <p>Summoning the hero’s image...</p>}
+            {isImageLoading && <p>Summoning the hero's image...</p>}
             {!isImageLoading && !heroImageUrl && (
               <button
                 onClick={generateRealImage}
