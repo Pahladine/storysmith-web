@@ -1,0 +1,217 @@
+{
+  "act": "Hero Creation - Act I",
+  "description": "Guides the user through creating or selecting their hero.",
+  "systemInstructions": "You are ForgeHero, a whimsical but wise guide who helps the user create their hero for a story.",
+  "meta": {
+    "stylePreset": "3D animated film",
+    "consistencyTag": "whimsical_fantasy_child",
+    "format": "full body, front-facing",
+    "lighting": "soft cinematic",
+    "rendering": "Rendered as a 3D animated film",
+    "imageRestrictions": "no text, no captions, no writing, no labels, no words"
+  },
+  "steps": [
+    {
+      "id": "origin",
+      "prompt": "Welcome, brave adventurer! To begin our grand tale, tell me, from where shall our hero emerge?",
+      "keeperLine": "Welcome, brave adventurer! To begin our grand tale, tell me, from where shall our hero emerge?",
+      "options": [
+        {
+          "label": "The bustling city",
+          "value": "city",
+          "next_step": "name"
+        },
+        {
+          "label": "A quiet village",
+          "value": "village",
+          "next_step": "name"
+        },
+        {
+          "label": "The deep forest",
+          "value": "forest",
+          "next_step": "name"
+        },
+        {
+          "label": "A distant land",
+          "value": "distant_land",
+          "next_step": "name"
+        }
+      ]
+    },
+    {
+      "id": "name",
+      "prompt": "What shall our hero be called?",
+      "keeperLine": "What shall our hero be called?",
+      "input": {
+        "type": "text",
+        "placeholder": "Enter hero's name"
+      },
+      "next_step": "age"
+    },
+    {
+      "id": "age",
+      "prompt": "What age shall they be?",
+      "keeperLine": "What age shall they be?",
+      "input": {
+        "type": "number",
+        "placeholder": "Enter hero's age"
+      },
+      "next_step": "gender"
+    },
+    {
+      "id": "gender",
+      "prompt": "What is your hero's gender?",
+      "keeperLine": "What is your hero's gender?",
+      "options": [
+        {
+          "label": "Male",
+          "value": "male",
+          "next_step": "traits"
+        },
+        {
+          "label": "Female",
+          "value": "female",
+          "next_step": "traits"
+        },
+        {
+          "label": "Non-binary",
+          "value": "non_binary",
+          "next_step": "traits"
+        },
+        {
+          "label": "Other",
+          "value": "other",
+          "next_step": "traits"
+        }
+      ]
+    },
+    {
+      "id": "traits",
+      "prompt": "Describe your hero's key traits.",
+      "keeperLine": "Describe your hero's key traits.",
+      "input": {
+        "type": "text",
+        "placeholder": "e.g., brave, cunning, loyal"
+      },
+      "next_step": "wardrobe"
+    },
+    {
+      "id": "wardrobe",
+      "prompt": "What is your hero wearing?",
+      "keeperLine": "What is your hero wearing?",
+      "input": {
+        "type": "text",
+        "placeholder": "Describe outfit"
+      },
+      "next_step": "signature_item"
+    },
+    {
+      "id": "signature_item",
+      "prompt": "What is your hero's signature item?",
+      "keeperLine": "What is your hero's signature item?",
+      "input": {
+        "type": "text",
+        "placeholder": "Describe signature item"
+      },
+      "next_step": "image_upload"
+    },
+    {
+      "id": "image_upload",
+      "prompt": "Please upload a photo of the hero.",
+      "keeperLine": "Please upload a photo of the hero.",
+      "input": {
+        "type": "file",
+        "accept": "image/*"
+      },
+      "next_step": "image_generation"
+    },
+    {
+      "id": "image_generation",
+      "prompt": "Generating your hero's image...",
+      "keeperLine": "Generating your hero's image...",
+      "backend_call": {
+        "endpoint": "/api/generateHeroImage",
+        "method": "POST",
+        "payload_template": {
+          "name": "{{name}}",
+          "age": "{{age}}",
+          "gender": "{{gender}}",
+          "traits": "{{traits}}",
+          "wardrobe": "{{wardrobe}}",
+          "signatureItem": "{{signature_item}}",
+          "origin": "{{origin}}"
+        },
+        "response_mapping": {
+          "imageUrl": "heroImageUrl",
+          "story_content.CharacterBlock": "character_block",
+          "story_content.CharacterBlock.hero_name": "hero_name",
+          "story_content.CharacterBlock.appearance": "hero_appearance",
+          "story_content.CharacterBlock.wardrobe": "hero_wardrobe",
+          "story_content.CharacterBlock.signature_item": "hero_signature_item",
+          "story_content.StoryBlueprintBlock": "story_blueprint",
+          "story_content.StoryBlueprintBlock.structure.number_of_scenes": "number_of_scenes",
+          "story_data.visual_style": "visual_style",
+          "story_data.visual_consistency_tag": "visual_consistency_tag",
+          "story_content.SceneJSON_array": []
+        }
+      },
+      "next_step": "approval"
+    },
+    {
+      "id": "approval",
+      "prompt": "Do you approve this hero image?",
+      "keeperLine": "Do you approve this hero image?",
+      "options": [
+        {
+          "label": "Approve",
+          "value": "approve",
+          "next_step": "completion"
+        },
+        {
+          "label": "Retry",
+          "value": "retry",
+          "next_step": "image_generation"
+        }
+      ]
+    },
+    {
+      "id": "auto_generate",
+      "prompt": "A hero, conjured from the void!",
+      "keeperLine": "A hero, conjured from the void!",
+      "backend_call": {
+        "endpoint": "/api/autoGenerateHero",
+        "method": "POST",
+        "payload_template": {},
+        "response_mapping": {
+          "name": "name",
+          "age": "age",
+          "gender": "gender",
+          "traits": "traits",
+          "wardrobe": "wardrobe",
+          "signatureItem": "signatureItem",
+          "imageUrl": "heroImageUrl",
+          "story_content.CharacterBlock": "character_block",
+          "story_content.CharacterBlock.hero_name": "hero_name",
+          "story_content.CharacterBlock.appearance": "hero_appearance",
+          "story_content.CharacterBlock.wardrobe": "hero_wardrobe",
+          "story_content.CharacterBlock.signature_item": "hero_signature_item",
+          "story_content.StoryBlueprintBlock": "story_blueprint",
+          "story_content.StoryBlueprintBlock.structure.number_of_scenes": "number_of_scenes",
+          "story_data.visual_style": "visual_style",
+          "story_data.visual_consistency_tag": "visual_consistency_tag",
+          "story_content.SceneJSON_array": []
+        }
+      },
+      "next_step": "approval"
+    },
+    {
+      "id": "completion",
+      "prompt": "Your hero is ready for adventure!",
+      "keeperLine": "Your hero is ready for adventure!",
+      "on_completion": {
+        "action": "change_tab",
+        "target": "SpinTale"
+      }
+    }
+  ]
+}
