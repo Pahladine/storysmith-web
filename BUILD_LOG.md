@@ -5,3 +5,5 @@
 - Added Playwright config and basic smoke tests
 - Added review-kit generator
 - Added project guardrail docs (SUMMARY, BRIEF, AGREEMENT, LOG)
+
+## 2025-08-22T11:14:18 — CI touch commit to trigger pipeline
