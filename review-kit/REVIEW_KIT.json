@@ -1,0 +1,54 @@
+{
+  "meta": {
+    "generatedAt": "2025-08-22T14:58:23.134Z",
+    "ci": false,
+    "node": "v22.14.0"
+  },
+  "package": {
+    "name": "storysmith-app",
+    "version": "0.1.0",
+    "scripts": {
+      "dev": "next dev -p 3001",
+      "build": "next build",
+      "start": "next start -p 3001",
+      "tsc": "tsc",
+      "lint": "eslint . --ext .ts,.tsx --max-warnings=0",
+      "test:smoke": "playwright test -c playwright.config.ts",
+      "test:smoke:ci": "start-server-and-test start http://localhost:3001 'playwright test -c playwright.config.ts'",
+      "review:kit": "tsx scripts/generateReviewKit.ts",
+      "review:kit:ci": "tsx scripts/generateReviewKit.ts --ci"
+    },
+    "dependencies": {
+      "react": "latest",
+      "react-dom": "latest",
+      "next": "^14.2.5"
+    },
+    "devDependencies": {
+      "@playwright/test": "^1.47.0",
+      "eslint": "^9.9.0",
+      "start-server-and-test": "^2.0.0",
+      "tsx": "^4.15.7",
+      "typescript": "^5.5.4",
+      "typescript-eslint": "^8.0.0"
+    }
+  },
+  "routes": [
+    {
+      "route": "/",
+      "file": "src\\app\\page.tsx"
+    }
+  ],
+  "envAudit": {
+    "exampleOnly": [],
+    "missingInExample": [],
+    "presentInBoth": []
+  },
+  "prisma": {
+    "schemaPath": null,
+    "schema": null
+  },
+  "git": {
+    "ref": "476e047",
+    "changedFiles": []
+  }
+}
